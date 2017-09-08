@@ -3,66 +3,78 @@ import connect_engine
 import connect_players
 import time
 
-def play_game(p1,p2,VISUALIZE):
-
-    WINDOW_WIDTH = 700
-    WINDOW_HEIGHT = 600
+def play_game(p1, p2, VISUALIZE):
+    engine = connect_engine.Engine()
 
     if VISUALIZE:
-        renObj = connect_board_renderer.Renderer(WINDOW_WIDTH, WINDOW_HEIGHT)
+        WINDOW_WIDTH = 700
+        WINDOW_HEIGHT = 600
+
+        renObj = connect_board_renderer.Renderer(engine, WINDOW_WIDTH, WINDOW_HEIGHT)
         renObj.draw_board()
-        window = renObj.get_window()
 
-    n=0
 
-    game_board=[['0' for x in range(7)] for y in range(6)]
-
+    n = 0
     if p1 == 0:
         if not VISUALIZE:
             raise PlayerError('Cannot play without visualize')
-        PLAYER_ONE = connect_players.Human('r',VISUALIZE)
+        PLAYER_ONE = connect_players.Human('r', engine, renObj)
     elif p1 == 1:
-        PLAYER_ONE = connect_players.AiRand('r',VISUALIZE)
+        PLAYER_ONE = connect_players.AiRand('r', engine)
 
     if p2 == 0:
         if not VISUALIZE:
             raise ValueError('Cannot play without visualize')
-        PLAYER_TWO = connect_players.Human('b',VISUALIZE)
+        PLAYER_TWO = connect_players.Human('b', engine, renObj)
     elif p2 == 1:
-        PLAYER_TWO = connect_players.AiRand('b',VISUALIZE)    
+        PLAYER_TWO = connect_players.AiRand('b', engine)    
 
-    engine = connect_engine.Engine()
+    max_moves = 21
+    players = [PLAYER_ONE, PLAYER_TWO]
+    turn = 0
 
-    while n < 21:
-        if PLAYER_ONE.is_human():
-            move_one = PLAYER_ONE.get_move(game_board,window,WINDOW_WIDTH)
-        else:
-            move_one = PLAYER_ONE.get_move(game_board)
-        point= engine.update_board(game_board,move_one,PLAYER_ONE.get_color(),VISUALIZE)
-        if VISUALIZE:
-            renObj.update_pieces(game_board,point[0],point[1],PLAYER_ONE.get_color())
-        if engine.board_eval(game_board,PLAYER_ONE.get_color()):
-            print('Player 1 has won')
-            if VISUALIZE:
-                time.sleep(3)
+
+    while n < max_moves:
+        state = engine.is_terminal(players[1 - turn].get_color())
+        moves = engine.get_legal_moves()
+
+        if state != 0 or len(moves) == 0:
             break
 
-        if PLAYER_TWO.is_human():
-            move_two = PLAYER_TWO.get_move(game_board,window,WINDOW_WIDTH)
-        else:
-            move_two = PLAYER_TWO.get_move(game_board)
-        point = engine.update_board(game_board,move_two,PLAYER_TWO.get_color(),VISUALIZE)
+        move = players[turn].get_move(moves)
+        point = engine.update_board(move, players[turn].get_color())
+        
         if VISUALIZE:
-            renObj.update_pieces(game_board,point[0],point[1],PLAYER_TWO.get_color())
-        if engine.board_eval(game_board,PLAYER_TWO.get_color()):
-            print('Player 2 has won')
-            if VISUALIZE:
-                time.sleep(3)
-            break
+            renObj.update_pieces(point[0], point[1], players[turn].get_color())
+            time.sleep(.01)
+
+        turn = 1 - turn
+
     if VISUALIZE:
-        window.close()
+        renObj.end()
+        engine.print_final()
 
-        for line in game_board:
-            print(line)
+    return(state)
 
-play_game(1,1,False)
+
+def main():
+    games_to_play = 100000
+    renderer_option = True
+
+    red = 0
+    black = 0
+    total = 0
+
+    for i in range(games_to_play):
+        result = play_game(1, 1, renderer_option)
+        if result == 'r':
+            red += 1
+        elif result == 'b':
+            black += 1
+        total += 1
+
+    print('red won {0} times, {1} win rate'.format(red, round(red*100/total, 3)))
+    print('black won {0} times, {1} win rate'.format(black, round(black*100/total, 3)))
+    print('there were {0} draws, {1} draw rate'.format(total-black-red, round((total-black-red)*100/total, 3)))
+
+main()

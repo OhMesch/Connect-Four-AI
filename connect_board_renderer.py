@@ -2,9 +2,10 @@ import graphics
 from graphics import *
 
 class Renderer():
-    def __init__(self, width=700, height=600):
+    def __init__(self, engine, width=700, height=600):
         self.width = width
         self.height = height
+        self.engine = engine
         self.win = GraphWin("Game Board", width, height)
         self.win.setBackground("blue")
 
@@ -14,6 +15,10 @@ class Renderer():
 
     def get_window(self):
         return(self.win)
+
+
+    def get_width(self):
+        return self.width
 
 
     def draw_board(self):
@@ -33,7 +38,8 @@ class Renderer():
                 slot.setFill("white")
                 slot.draw(self.win)
 
-    def update_pieces(self,board,x,y,color):
+    def update_pieces(self,x,y,color):
+        board = self.engine.get_board()
         pointY = y*self.height/6
         pointX = x*self.width/7
         piece = Circle(Point(pointX+50,pointY+50),37.5)
@@ -42,6 +48,10 @@ class Renderer():
         else:
             piece.setFill("black")
         piece.draw(self.win)
+
+
+    def end(self):
+        self.get_window().close()
 
 class Menu(): #CHANGE TO SELF. WIDTH AND HIEGHT
     def __init__(self,window):
