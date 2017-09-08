@@ -61,22 +61,55 @@ class AiMonte(Player):
         self.samples = samples
 
     def get_move(self, moves):
+
         children = len(moves)
+        children_vals = children*[0]
         curr_samples = self.samples
         samples_per_child = curr_samples//children
 
-        while samples_per_child != 0:
+
+        #THINK HARDER
+        while samples_per_child == 0:
             curr_samples += 1
             samples_per_child = curr_samples//children
 
-        print('getting move with', curr_samples)
+        # print('getting move with', samples_per_child)
+
+        child_index=0
 
         for child in moves:
-            self.hard_rollout(child,samples_per_child)
+            for i in range(samples_per_child):
+                self.engine.push_move(child, self.color)
+                
+                inv_color = self.engine.invert_color(self.color)
+                winner = self.hard_rollout(inv_color)
+                self.engine.pop_move()
+
+                if winner == self.color:
+                    children_vals[child_index]+=1
+                elif winner == inv_color:
+                    children_vals[child_index]-=1
+            child_index+=1
 
 
-    def hard_rollout(self,move,samples):
+        best_path = max(children_vals)
+        a = children_vals.index(best_path)
+        return(moves[a])
 
+    def hard_rollout(self,color):
+        moves = self.engine.get_legal_moves()
+        node_state  = self.engine.is_terminal(color,moves)
+
+        if node_state != 0:
+            return(node_state)
+        else:
+            inv_color = self.engine.invert_color(color)
+
+            next_move = random.choice(moves)
+            self.engine.push_move(next_move,color)
+            v = self.hard_rollout(inv_color)
+            self.engine.pop_move()
+            return(v)
 
     def get_type(self):
         return('monte')

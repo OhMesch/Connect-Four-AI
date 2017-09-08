@@ -11,7 +11,9 @@ class Engine():
             print(i)
 
 
-    def is_terminal(self, color):
+    def is_terminal(self, color, moves):
+        if len(moves) == 0:
+            return('d')
         board = self.board
         for y in range(len(board)):
             for x in range(len(board[0])):
@@ -70,8 +72,9 @@ class Engine():
     def undo_move(self, move):
         for y in range(6):
             if self.board[y][move] != '0':
-                self.board[y][move] == '0'
+                self.board[y][move] = '0'
                 break
+
 
     def valid_move(self, move):
         board = self.board
@@ -83,9 +86,15 @@ class Engine():
             return(False)
 
 
+    def invert_color(self,color):
+        if color == 'r':
+            return('b')
+        else:
+            return('r')
+
     def get_legal_moves(self):
         legal = []
-        for i in range(6):
+        for i in range(7):
             if self.valid_move(i):
                 legal.append(i)
         return legal
