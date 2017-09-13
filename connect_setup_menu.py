@@ -63,7 +63,7 @@ class Interface():
 	def play_button_pressed(self):
 		self.trim_sims()
 		self.trim_games()
-		self.get_results()
+		self.close_setup()
 
 
 	def check_options(self, value):
@@ -112,16 +112,23 @@ class Interface():
 			num_games = 1
 			self.games.set('1')
 
-	def get_results(self):
-		#Replace selfs and get() with vars?
-		print(self.sims_one.get(),self.sims_two.get())
-		print((self.p1.get(),self.p2.get(),int(self.games.get()),self.vis_response.get()))
-		self.close_setup()
+	def get_menu_results(self):
+		return((self.p1.get(),self.p2.get(),int(self.games.get()),self.vis_response.get(),int(self.sims_one.get()),int(self.sims_two.get())))
 
 
 	def close_setup(self):
+		print('close')
+		self.win.quit()
 		self.win.destroy()
 
-root = Tk()
-window = Interface(root)
-root.mainloop()
+def menu_main():
+	root = Tk()
+	window = Interface(root)
+	root.mainloop()
+	return(window.get_menu_results())
+
+if __name__ == "__main__":
+	root = Tk()
+	window = Interface(root)
+	root.mainloop()
+	print(window.get_menu_results())
