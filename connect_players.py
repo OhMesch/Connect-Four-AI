@@ -29,7 +29,7 @@ class AiRand(Player):
         return(random.choice(moves))
 
     def get_type(self):
-        return('random')
+        return('Random AI')
 
 
 class Human(Player):
@@ -52,7 +52,7 @@ class Human(Player):
             print('pick a real move')
 
     def get_type(self):
-        return('human')
+        return('Human')
 
 
 class AiMonte(Player):
@@ -112,4 +112,4 @@ class AiMonte(Player):
             return(v)
 
     def get_type(self):
-        return('monte')
+        return('Monte Carlo AI')
