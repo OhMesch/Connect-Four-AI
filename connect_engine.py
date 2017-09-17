@@ -77,10 +77,9 @@ class Engine():
 
 
     def valid_move(self, move):
-        board = self.board
         if move < 0 or move > 6:
             return(False)
-        if board[0][move] == '0':
+        if self.board[0][move] == '0':
             return(True)
         else:
             return(False)
