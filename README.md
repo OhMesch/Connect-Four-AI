@@ -1,5 +1,9 @@
 # Connect-Four-AI
-Connect four game engine playable by human players and a variety of AI types. Currently only random AI, and Monte Carlo sampling AI implimented. Future plans include and Minimax. Also in-progress: more elaborate menu system. Selective matchmaking (human vs human, human vs ai, ai vs ai). Board visualization can be disabled for ai games.
+Connect four game engine playable by human players and a variety of AI types. Currently only random AI, and Monte Carlo sampling AI implimented. Future plans include implimenting Minimax and a self-play neural net.
+
+Selective matchmaking (human vs human, human vs ai, ai vs ai). Board visualization can be disabled for ai games.
+
+As of September 10th, focus will be shifted to creating generalized game AI that can compete in any 2 player, perfect information game (As opposed to simply just connect four AI). Will continue to experiment primarily in connect four engine.
 
 Monte Carlo AI surprisingly effective at relatively low sampling. 50 samples beats random 98% of time. 500 Samples holds its own against human players. The critical aspect here is even with a very low sample number, Monte Carlo tends to block the random ai's 4th piece. Both basically play randomly with the exception the Monte Carlo ai will register imminent opponet wins most the time and move to intercept.
 
