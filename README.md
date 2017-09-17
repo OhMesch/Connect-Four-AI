@@ -7,3 +7,4 @@ Program makes appearent obvious advantage of being player 1. In random ai vs ran
 
 This advantage can be leveraged by skill. At 7 samples (basically random) in Monte Carlo ai vs Monte Carlo ai matches, win rates are similar. First player ~55% second player ~45%. At 300 samples in Monte Carlo ai vs Monte Carlo ai, player 1 wins ~60% of games while player 2 wins ~40%
 
+Currently I've copied all the files and edited them slightly to produce a "trainer". The trainer is running monte carlo sims vs monte carlo sims and writing board state and probability of victory for each move to a separate CSV file. This CSV file will be used to train a neural net to evaluate moves given a board state. I hope to then improve the neural net through self-play. 
