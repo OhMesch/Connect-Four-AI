@@ -121,14 +121,10 @@ class Interface():
 		self.win.quit()
 		self.win.destroy()
 
-def menu_main():
-	root = Tk()
-	window = Interface(root)
-	root.mainloop()
-	return(window.get_menu_results())
-
 if __name__ == "__main__":
 	root = Tk()
 	window = Interface(root)
 	root.mainloop()
-	print(window.get_menu_results())
+	import connect_main
+	p1, p2, games, vis, s1, s2 = window.get_menu_results()
+	connect_main.benchmark(p1, p2, games, vis, s1, s2)
