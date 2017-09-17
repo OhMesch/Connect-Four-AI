@@ -1,6 +1,7 @@
 import random
 import time
 import connect_engine
+import os
 
 class Player():
     def __init__(self, color, engine):
@@ -28,7 +29,7 @@ class AiRand(Player):
     def get_move(self, moves):
         return(random.choice(moves))
 
-    def get_type(self):
+    def get_type(self): #could just inherit with self.type
         return('Random AI')
 
 
