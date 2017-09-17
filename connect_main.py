@@ -1,7 +1,7 @@
 import connect_board_renderer
 import connect_engine
 import connect_players
-import connect_setup_menu
+import os
 
 import time
 
@@ -43,15 +43,19 @@ def play_game(p1, p2, VISUALIZE, samples_one, samples_two):
 
     players = [PLAYER_ONE, PLAYER_TWO]
     turn = 0
-
+    # time_arr = []
     while n < MAX_MOVES:
         moves = engine.get_legal_moves()
         state = engine.is_terminal(players[1 - turn].get_color(), moves)
 
         if state != 0:
+            # print('avg move took {0} seconds'.format(sum(time_arr)/len(time_arr)))
             break
-
+        # start=time.time()
         move = players[turn].get_move(moves)
+        # end=time.time()
+        # time_arr.append(end-start)
+        
         point = engine.update_board(move, players[turn].get_color())
         
         if VISUALIZE:
@@ -66,37 +70,7 @@ def play_game(p1, p2, VISUALIZE, samples_one, samples_two):
     return(state)
 
 
-def main():
-    games_to_play = 1
-    renderer_option = True
-
-    red = 0
-    black = 0
-    draw = 0
-    total = 0
-
-    for i in range(games_to_play):
-        result = play_game(2, 2, renderer_option)
-        if result == 'r':
-            red += 1
-        elif result == 'b':
-            black += 1
-        elif result == 'd':
-            draw += 1
-        total += 1
-
-        print('game {0} over'.format(i))
-
-    print('red won {0} times, {1} win rate'.format(red, round(red*100/total, 3)))
-    print('black won {0} times, {1} win rate'.format(black, round(black*100/total, 3)))
-    print('there were {0} draws, {1} draw rate'.format(draw, round(draw*100/total, 3)))
-
-
-def benchmark():
-    (p1,p2,games_to_play,renderer_option,monte_sims_1,monte_sims_2) = (connect_setup_menu.menu_main())
-
-    print(monte_sims_1)
-
+def benchmark(p1,p2,games_to_play,renderer_option,monte_sims_1,monte_sims_2,trainter=0):
 
     red = 0
     black = 0
@@ -104,6 +78,7 @@ def benchmark():
     total = 0
     print(games_to_play)
     print('Games played per test:', games_to_play)
+
 
     for i in range(games_to_play):
         game_result = play_game(p1, p2, renderer_option, monte_sims_1, monte_sims_2)
@@ -114,11 +89,11 @@ def benchmark():
         elif game_result == 'd':
             draw += 1
         total += 1
-
         print('game {0} over'.format(i))
 
     print('red won {0} times, {1} win rate'.format(red, round(red*100/total, 3)))
     print('black won {0} times, {1} win rate'.format(black, round(black*100/total, 3)))
     print('there were {0} draws, {1} draw rate'.format(draw, round(draw*100/total, 3)))
 
-benchmark()
+if __name__ == "__main__":
+    benchmark('Monte Carlo AI','Monte Carlo AI',1000000,0,100,100,1)
